@@ -44,7 +44,7 @@
                         <div class="recipe-actions">
                             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') : ?>
                                 <a href="/VAII_KULINAR_WEB/public/index.php/recipe/edit/<?= $recipe['id'] ?>" class="button-edit">✏️ Upraviť</a>
-                                <a href="/VAII_KULINAR_WEB/public/index.php/recipe/delete/<?= $recipe['id'] ?>" class="button-delete" onclick="return confirm('Вы уверены, что хотите удалить рецепт?')">❌ Vymazať</a>
+                                <a href="/VAII_KULINAR_WEB/public/index.php/recipe/delete/<?= $recipe['id'] ?>" class="button-delete" ">❌ Vymazať</a>
                             <?php endif; ?>
 
                         </div>
@@ -56,7 +56,7 @@
 </main>
 
 <?php include 'footer.view.php'; ?>
-
+<script src="/VAII_KULINAR_WEB/public/assets/js/delete.js"></script>
 <script src="/VAII_KULINAR_WEB/public/assets/js/liveSearch.js"></script>
 </body>
 </html>
