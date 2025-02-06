@@ -14,6 +14,23 @@ class RecipeController {
         $this->recipeModel = new Recipe();
         $this->ingredientModel = new Ingredient();
     }
+    private function downloadImageFromUrl($imageUrl) {
+        $uploadDir = __DIR__ . '/../../public/uploads/';
+        $imageName = time() . '_' . basename(parse_url($imageUrl, PHP_URL_PATH));
+        $uploadFile = $uploadDir . $imageName;
+
+        try {
+            $imageData = file_get_contents($imageUrl);
+            if ($imageData === false) {
+                return null; // Не удалось скачать картинку
+            }
+            file_put_contents($uploadFile, $imageData);
+            return "/VAII_KULINAR_WEB/public/uploads/" . $imageName;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
 
     // Metóda na uloženie receptu
     public function store() {
@@ -151,6 +168,7 @@ class RecipeController {
             $description = $_POST['description'];
             $steps = $_POST['steps'];
             $image = !empty($_POST['image']) ? $_POST['image'] : null;
+
 
             if (empty($name) || empty($description) || empty($steps)) {
                 die('Všetky polia sú povinné!');
