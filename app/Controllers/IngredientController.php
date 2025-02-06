@@ -9,14 +9,14 @@ class IngredientController
         $this->ingredientModel = new Ingredient();
     }
 
-    // Показать все ингредиенты
+    // Zobraziť všetky ingrediencie
     public function index()
     {
         $ingredients = $this->ingredientModel->getAllIngredients();
         require_once 'app/Views/pages/ingredients.view.php';
     }
 
-    // Добавление нового ингредиента
+    // Pridanie novej ingrediencie
     public function store()
     {
         if (isset($_POST['name'], $_POST['unit'])) {

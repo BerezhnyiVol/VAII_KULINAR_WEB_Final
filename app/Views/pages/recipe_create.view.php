@@ -1,67 +1,65 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="sk">
 
-
-    <meta charset="UTF-8">
-    <title>Добавить новый рецепт</title>
+<meta charset="UTF-8">
+<title>Pridať nový recept</title>
 </head>
 <body>
-<h1>➕ Добавить новый рецепт</h1>
+<h1>➕ Pridať nový recept</h1>
 <link rel="stylesheet" href="/VAII_KULINAR_WEB/public/assets/css/create.css">
 <head>
 
-<form action="/VAII_KULINAR_WEB/public/index.php/recipe/create" method="POST">
-    <!-- Название рецепта -->
-    <label for="name">Название рецепта:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+    <form action="/VAII_KULINAR_WEB/public/index.php/recipe/create" method="POST">
+        <!-- Názov receptu -->
+        <label for="name">Názov receptu:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
 
-    <!-- Описание рецепта -->
-    <label for="description">Описание:</label><br>
-    <textarea id="description" name="description" required></textarea><br><br>
+        <!-- Popis receptu -->
+        <label for="description">Popis:</label><br>
+        <textarea id="description" name="description" required></textarea><br><br>
 
-    <!-- Шаги приготовления -->
-    <label for="steps">Шаги приготовления:</label><br>
-    <textarea id="steps" name="steps" required></textarea><br><br>
+        <!-- Kroky prípravy -->
+        <label for="steps">Postup prípravy:</label><br>
+        <textarea id="steps" name="steps" required></textarea><br><br>
 
-    <!-- URL изображения -->
-    <label for="image">URL изображения (необязательно):</label><br>
-    <input type="url" id="image" name="image" placeholder="https://example.com/image.jpg"><br><br>
+        <!-- URL obrázka -->
+        <label for="image">URL obrázka (voliteľné):</label><br>
+        <input type="url" id="image" name="image" placeholder="https://example.com/image.jpg"><br><br>
 
-    <!-- Ингредиенты -->
-    <div id="ingredients-container">
-        <div class="ingredient-row">
-            <select name="ingredient_id[]" class="ingredient-select" onchange="toggleIngredientFields(this)">
-                <option value="" disabled selected>Выберите ингредиент или добавьте новый</option>
-                <?php foreach ($ingredients as $ingredient): ?>
-                    <option value="<?= $ingredient['id'] ?>"><?= htmlspecialchars($ingredient['name']) ?></option>
-                <?php endforeach; ?>
-                <option value="new">Добавить новый ингредиент</option>
-            </select>
+        <!-- Ingrediencie -->
+        <div id="ingredients-container">
+            <div class="ingredient-row">
+                <select name="ingredient_id[]" class="ingredient-select" onchange="toggleIngredientFields(this)">
+                    <option value="" disabled selected>Vyberte ingredienciu alebo pridajte novú</option>
+                    <?php foreach ($ingredients as $ingredient): ?>
+                        <option value="<?= $ingredient['id'] ?>"><?= htmlspecialchars($ingredient['name']) ?></option>
+                    <?php endforeach; ?>
+                    <option value="new">Pridať novú ingredienciu</option>
+                </select>
 
-            <input type="text" name="new_ingredient_name[]" class="new-ingredient-name" placeholder="Название ингредиента" style="display: none;">
-            <input type="text" name="new_ingredient_unit[]" class="new-ingredient-unit" placeholder="Единица измерения" style="display: none;">
-            <input type="number" name="ingredient_amount[]" class="ingredient-amount" placeholder="Количество" required style="display: none;">
+                <input type="text" name="new_ingredient_name[]" class="new-ingredient-name" placeholder="Názov ingrediencie" style="display: none;">
+                <input type="text" name="new_ingredient_unit[]" class="new-ingredient-unit" placeholder="Jednotka" style="display: none;">
+                <input type="number" name="ingredient_amount[]" class="ingredient-amount" placeholder="Množstvo" required style="display: none;">
 
-            <button type="button" class="remove-ingredient" onclick="removeIngredient(this)">Удалить</button>
+                <button type="button" class="remove-ingredient" onclick="removeIngredient(this)">Odstrániť</button>
+            </div>
         </div>
-    </div>
 
-    <!-- Кнопка "Добавить ингредиент" ниже, по центру -->
-    <div class="centered-button">
-        <button type="button" id="add-ingredient">Добавить ингредиент</button>
-    </div>
+        <!-- Tlačidlo "Pridať ingredienciu" nižšie, v strede -->
+        <div class="centered-button">
+            <button type="button" id="add-ingredient">Pridať ingredienciu</button>
+        </div>
 
-    <!-- Кнопка "Добавить рецепт" еще ниже, по центру -->
-    <div class="centered-button">
-        <button type="submit">Добавить рецепт</button>
-    </div>
+        <!-- Tlačidlo "Pridať recept" ešte nižšie, v strede -->
+        <div class="centered-button">
+            <button type="submit">Pridať recept</button>
+        </div>
 
+    </form>
 
-</form>
+    <a href="/VAII_KULINAR_WEB/public/index.php/recipes">← Späť na zoznam receptov</a>
 
-<a href="/VAII_KULINAR_WEB/public/index.php/recipes">← Вернуться к списку рецептов</a>
-
-<script src="/VAII_KULINAR_WEB/public/assets/js/add-ingredient.js"></script>
+    <script src="/VAII_KULINAR_WEB/public/assets/js/add-ingredient.js"></script>
 
 </body>
 </html>

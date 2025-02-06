@@ -1,39 +1,38 @@
 <?php
 
 require_once __DIR__ . '/../Models/Recipe.php';
-require_once __DIR__ . '/../Models/Ingredient.php';  // Добавить этот путь
+require_once __DIR__ . '/../Models/Ingredient.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 class RecipeController {
     private $recipeModel;
     private $ingredientModel;
+
     public function __construct() {
         $this->recipeModel = new Recipe();
         $this->ingredientModel = new Ingredient();
     }
 
-
-    // Метод для сохранения рецепта
+    // Metóda na uloženie receptu
     public function store() {
         $db = Database::getInstance()->getConnection();
 
         try {
             $db->beginTransaction();
 
-            // Получаем данные из формы
+            // Získanie údajov z formulára
             $name = $_POST['name'] ?? null;
             $description = $_POST['description'] ?? null;
             $steps = $_POST['steps'] ?? null;
             $image = $_POST['image'] ?? null;
 
             if (!$name || !$description || !$steps) {
-                throw new Exception("Некоторые обязательные поля не заполнены.");
+                throw new Exception("Niektoré povinné polia nie sú vyplnené.");
             }
 
-            // 1️⃣ Добавляем рецепт
+            // 1️⃣ Pridanie receptu
             $stmt = $db->prepare("INSERT INTO recipes (name, description, steps, image) VALUES (:name, :description, :steps, :image)");
             $stmt->execute([
                 ':name' => $name,
@@ -43,21 +42,21 @@ class RecipeController {
             ]);
             $recipeId = $db->lastInsertId();
 
-            // 2️⃣ Работа с ингредиентами
+            // 2️⃣ Práca s ingredienciami
             $existingIngredients = $_POST['ingredient_id'] ?? [];
             $amounts = $_POST['ingredient_amount'] ?? [];
             $newIngredientNames = $_POST['new_ingredient_name'] ?? [];
             $newIngredientUnits = $_POST['new_ingredient_unit'] ?? [];
             $newAmounts = $_POST['new_ingredient_amount'] ?? [];
 
-            $newIngredientIds = []; // Список ID новых ингредиентов
+            $newIngredientIds = []; // Zoznam ID nových ingrediencií
 
-            // 3️⃣ Добавляем новые ингредиенты в `ingredients`
+            // 3️⃣ Pridanie nových ingrediencií do `ingredients`
             foreach ($newIngredientNames as $index => $newIngredientName) {
                 if (!empty($newIngredientName)) {
                     $newUnit = $newIngredientUnits[$index] ?? '';
 
-                    // Вставляем новый ингредиент в `ingredients`
+                    // Vloženie novej ingrediencie do `ingredients`
                     $stmt = $db->prepare("INSERT INTO ingredients (name, unit) VALUES (:name, :unit)");
                     $stmt->execute([
                         ':name' => $newIngredientName,
@@ -65,7 +64,7 @@ class RecipeController {
                     ]);
                     $newIngredientId = $db->lastInsertId();
 
-                    // Добавляем ID нового ингредиента в массив
+                    // Pridanie ID novej ingrediencie do zoznamu
                     $newIngredientIds[] = [
                         'id' => $newIngredientId,
                         'amount' => $newAmounts[$index] ?? ''
@@ -73,10 +72,10 @@ class RecipeController {
                 }
             }
 
-            // 4️⃣ Объединяем ID существующих и новых ингредиентов
+            // 4️⃣ Spojenie ID existujúcich a nových ingrediencií
             $finalIngredients = [];
 
-            // Сначала добавляем существующие ингредиенты
+            // Najprv pridáme existujúce ingrediencie
             foreach ($existingIngredients as $index => $ingredientId) {
                 if (!empty($ingredientId) && is_numeric($ingredientId) && !empty($amounts[$index])) {
                     $finalIngredients[] = [
@@ -86,10 +85,10 @@ class RecipeController {
                 }
             }
 
-            // Добавляем новые ингредиенты
+            // Pridáme nové ingrediencie
             $finalIngredients = array_merge($finalIngredients, $newIngredientIds);
 
-            // 5️⃣ Записываем все ингредиенты в `recipe_ingredients`
+            // 5️⃣ Zapísanie všetkých ingrediencií do `recipe_ingredients`
             foreach ($finalIngredients as $ingredient) {
                 $stmt = $db->prepare("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount) VALUES (:recipe_id, :ingredient_id, :amount)");
                 $stmt->execute([
@@ -105,66 +104,45 @@ class RecipeController {
 
         } catch (Exception $e) {
             $db->rollBack();
-            die("Ошибка при добавлении рецепта: " . $e->getMessage());
+            die("Chyba pri pridávaní receptu: " . $e->getMessage());
         }
     }
 
-
-
-
-
-
-
-
-
-
+    // Vyhľadávanie receptov
     public function search() {
-        // Получаем строку поиска
         $query = isset($_GET['query']) ? $_GET['query'] : '';
 
-        // Для отладки, проверим, что приходит в query
-        error_log("Поиск: " . $query);  // Это запишет в логи XAMPP
+        error_log("Hľadanie: " . $query);
 
-        // Получаем все рецепты, которые содержат строку в названии
         $recipes = $this->recipeModel->getAllRecipes($query);
-
-        // Отправляем ответ в формате JSON
 
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($recipes, JSON_UNESCAPED_UNICODE);
-
     }
 
-
-
-
-    // Список рецептов
+    // Zoznam receptov
     public function index() {
         $recipes = $this->recipeModel->getAllRecipes();
         require __DIR__ . '/../Views/pages/recipes.view.php';
     }
 
-    // Просмотр рецепта
+    // Zobrazenie receptu
     public function view($view, $data = []) {
-        extract($data); // Разворачиваем массив в переменные
-        require_once __DIR__ . '/../Views/' . $view . '.php'; // Подключаем представление
+        extract($data);
+        require_once __DIR__ . '/../Views/' . $view . '.php';
     }
 
     public function show($id) {
-        // Получаем рецепт по ID
         $recipe = $this->recipeModel->getRecipeById($id);
-
-        // Получаем ингредиенты для этого рецепта
         $ingredients = $this->recipeModel->getIngredientsForRecipe($id);
 
-        // Передаем данные в представление
         $this->view('pages/recipe.view', [
             'recipe' => $recipe,
             'ingredients' => $ingredients
         ]);
     }
 
-    // Добавление рецепта
+    // Pridanie receptu
     public function create() {
         $ingredients = $this->ingredientModel->getAllIngredients();
 
@@ -172,13 +150,13 @@ class RecipeController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $steps = $_POST['steps'];
-            $image = !empty($_POST['image']) ? $_POST['image'] : null; // Сохраняем URL или NULL
+            $image = !empty($_POST['image']) ? $_POST['image'] : null;
 
             if (empty($name) || empty($description) || empty($steps)) {
-                die('Все поля обязательны для заполнения!');
+                die('Všetky polia sú povinné!');
             }
 
-            $this->recipeModel->createRecipe($name, $description, $steps, $image); // Передаем $image
+            $this->recipeModel->createRecipe($name, $description, $steps, $image);
             header('Location: /VAII_KULINAR_WEB/public/index.php/recipes');
             exit;
         }
@@ -186,8 +164,7 @@ class RecipeController {
         require_once __DIR__ . '/../Views/pages/recipe_create.view.php';
     }
 
-
-    // Показ формы редактирования рецепта
+    // Zobrazenie formulára na úpravu receptu
     public function edit($id) {
         $recipe = $this->recipeModel->getRecipeById($id);
 
@@ -195,13 +172,12 @@ class RecipeController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $steps = $_POST['steps'];
-            $image = isset($_POST['image']) ? $_POST['image'] : null; // Получение URL изображения
+            $image = isset($_POST['image']) ? $_POST['image'] : null;
 
             if (empty($name) || empty($description) || empty($steps)) {
-                die('Все поля обязательны для заполнения!');
+                die('Všetky polia sú povinné!');
             }
 
-            // Обновляем рецепт, включая URL изображения
             $this->recipeModel->updateRecipe($id, $name, $description, $steps, $image);
 
             header('Location: /VAII_KULINAR_WEB/public/index.php/recipes');
@@ -211,8 +187,7 @@ class RecipeController {
         require_once __DIR__ . '/../Views/pages/recipe_edit.view.php';
     }
 
-
-// Обновление рецепта
+    // Aktualizácia receptu
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
@@ -220,7 +195,7 @@ class RecipeController {
             $steps = $_POST['steps'];
 
             if (empty($name) || empty($description) || empty($steps)) {
-                die('Все поля обязательны для заполнения!');
+                die('Všetky polia sú povinné!');
             }
 
             $this->recipeModel->updateRecipe($id, $name, $description, $steps);
@@ -229,30 +204,23 @@ class RecipeController {
         }
     }
 
-
-    // Удаление рецепта
+    // Odstránenie receptu
     public function delete($id) {
         if (!$id) {
             http_response_code(400);
-            echo json_encode(["error" => "ID рецепта не передан"]);
+            echo json_encode(["error" => "ID receptu nebolo zadané"]);
             exit;
         }
 
-        $recipeModel = new Recipe(); // Возможно тут ошибка!
+        $recipeModel = new Recipe();
         $deleted = $recipeModel->deleteRecipe($id);
 
         if ($deleted) {
-            echo json_encode(["success" => "Рецепт удалён"]);
+            echo json_encode(["success" => "Recept bol odstránený"]);
         } else {
             http_response_code(500);
-            echo json_encode(["error" => "Ошибка при удалении рецепта"]);
+            echo json_encode(["error" => "Chyba pri odstraňovaní receptu"]);
         }
         exit;
     }
-
-
-
-
-
-
 }

@@ -1,8 +1,8 @@
 <h1><?= htmlspecialchars($recipe['name']) ?></h1>
 
-<!-- Отображение фотографии, если она есть -->
+<!-- Zobrazenie fotografie, ak existuje -->
 <?php if (!empty($recipe['image'])): ?>
-    <img src="<?= htmlspecialchars($recipe['image']) ?>" alt="Фото рецепта" class="recipe-image">
+    <img src="<?= htmlspecialchars($recipe['image']) ?>" alt="Fotografia receptu" class="recipe-image">
 <?php endif; ?>
 
 <p><?= htmlspecialchars($recipe['description']) ?></p>
@@ -16,7 +16,7 @@
         <?php endforeach; ?>
     </ul>
 <?php else: ?>
-    <p>Ingrediencie nie sú k dispozícii.</p>
+    <p>Žiadne ingrediencie nie sú k dispozícii.</p>
 <?php endif; ?>
 
-<a href="/VAII_KULINAR_WEB/public/index.php/recipes">Späť na zoznam</a>
+<a href="/VAII_KULINAR_WEB/public/index.php/recipes">🔙 Späť na zoznam</a>

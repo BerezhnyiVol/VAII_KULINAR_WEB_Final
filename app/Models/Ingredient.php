@@ -9,7 +9,7 @@ class Ingredient
         $this->db = Database::getInstance()->getConnection();
     }
 
-    // Получение всех ингредиентов
+    // Získanie všetkých ingrediencií
     public function getAllIngredients()
     {
         $query = 'SELECT * FROM ingredients';
@@ -17,6 +17,8 @@ class Ingredient
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Pridanie ingrediencií k receptu
     public function addIngredientsToRecipe($recipeId, $ingredients)
     {
         $stmt = $this->db->prepare("
@@ -33,8 +35,7 @@ class Ingredient
         }
     }
 
-
-    // Добавление нового ингредиента
+    // Pridanie novej ingrediencie
     public function addNewIngredient($name, $unit)
     {
         $query = 'INSERT INTO ingredients (name, unit) VALUES (:name, :unit)';

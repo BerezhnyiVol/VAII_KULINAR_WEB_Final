@@ -3,21 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>🍽️ Список рецептов</title>
+    <title>🍽️ Zoznam receptov</title>
     <link rel="stylesheet" href="/VAII_KULINAR_WEB/public/assets/css/recipes.css">
 </head>
 <body>
 
 <?php include 'header.view.php'; ?>
 
-<!-- 🔹 Всплывающее сообщение об успешном удалении -->
+<!-- 🔹 Vyskakovacia správa o úspešnom odstránení -->
 <div id="success-message" class="success-message" style="display: none;">
-    ✅ Рецепт успешно удалён!
+    ✅ Recept bol úspešne odstránený!
 </div>
 
 <main>
     <section class="search-section">
-        <input type="text" id="search" placeholder="🔍 Поиск рецепта..." class="search-box">
+        <input type="text" id="search" placeholder="🔍 Hľadať recept..." class="search-box">
     </section>
 
     <section class="recipe-list-section">
@@ -27,16 +27,16 @@
                     <div class="recipe-card" id="recipe-<?= $recipe['id'] ?>">
                         <a href="/VAII_KULINAR_WEB/public/index.php/recipe/<?= $recipe['id'] ?>" class="recipe-link">
 
-                            <!-- Отображение изображения только если оно есть -->
+                            <!-- Zobrazenie obrázka iba ak existuje -->
                             <?php if (!empty($recipe['image'])): ?>
                                 <img src="<?= htmlspecialchars($recipe['image']) ?>"
                                      alt="<?= htmlspecialchars($recipe['name']) ?>"
                                      class="recipe-image"
                                      style="max-width: 200px; height: auto; border-radius: 8px;">
                             <?php else: ?>
-                                <!-- Placeholder для рецептов без изображения -->
+                                <!-- Placeholder pre recepty bez obrázka -->
                                 <img src="/VAII_KULINAR_WEB/public/assets/images/placeholder.png"
-                                     alt="Нет изображения"
+                                     alt="Žiadny obrázok"
                                      class="recipe-image"
                                      style="max-width: 150px; height: auto; border-radius: 8px;">
                             <?php endif; ?>
@@ -61,11 +61,11 @@
 
 <?php include 'footer.view.php'; ?>
 
-<!-- Подключаем delete.js для AJAX-удаления рецептов -->
+<!-- Pripojenie delete.js pre AJAX odstránenie receptov -->
 <script src="/VAII_KULINAR_WEB/public/assets/js/delete.js"></script>
 <script src="/VAII_KULINAR_WEB/public/assets/js/liveSearch.js"></script>
 
-<!-- 🔹 Стили для всплывающего сообщения -->
+<!-- 🔹 Štýly pre vyskakovaciu správu -->
 <style>
     .success-message {
         position: fixed;

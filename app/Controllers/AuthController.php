@@ -11,17 +11,17 @@ class AuthController {
             session_start();
         }
     }
-// Показать форму входа
+// Zobraziť prihlasovací formulár
     public function showLoginForm() {
         require_once __DIR__ . '/../Views/pages/login.view.php';
     }
     public function showRegisterForm() {
         require_once __DIR__ . '/../Views/pages/register.view.php';
     }
-    // 1️⃣ Регистрация пользователя
+    // 1️⃣ Registrácia používateľa
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            die("❌ Неверный метод запроса");
+            die("❌ Neplatná metóda požiadavky");
         }
 
         $name = $_POST['name'] ?? null;
@@ -29,21 +29,21 @@ class AuthController {
         $password = $_POST['password'] ?? null;
 
         if (!$name || !$email || !$password) {
-            die("<h1 style='text-align: center; color: red;'>❌ Заполните все поля</h1>");
+            die("<h1 style='text-align: center; color: red;'>❌ Vyplňte všetky polia</h1>");
         }
 
-        // Проверяем, есть ли уже такой пользователь
+        // Kontrola, či už používateľ existuje
         $stmt = $this->db->prepare("SELECT id FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
 
         if ($stmt->fetch()) {
-            die("<h1 style='text-align: center; color: red;'>❌ Пользователь с таким email уже существует</h1>");
+            die("<h1 style='text-align: center; color: red;'>❌ Používateľ s týmto e-mailom už existuje</h1>");
         }
 
-        // Хешируем пароль
+        // Hashovanie hesla
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Добавляем пользователя в БД
+        // Pridanie používateľa do databázy
         $stmt = $this->db->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, 'user')");
         $stmt->execute([
             ':name' => $name,
@@ -51,8 +51,8 @@ class AuthController {
             ':password' => $hashedPassword
         ]);
 
-        // Выводим сообщение и перенаправляем на главную
-        echo "<h1 style='text-align: center; color: green;'>✅ Регистрация успешна!</h1>";
+        // Zobrazenie správy a presmerovanie na hlavnú stránku
+        echo "<h1 style='text-align: center; color: green;'>✅ Registrácia úspešná!</h1>";
         echo "<script>
             setTimeout(function() {
                 window.location.href = '/VAII_KULINAR_WEB/public/index.php/home';
@@ -68,20 +68,20 @@ class AuthController {
             $password = $_POST['password'] ?? '';
 
             if (!$username || !$password) {
-                die("<h1 style='text-align: center; color: red;'>❌ Заполните все поля</h1>");
+                die("<h1 style='text-align: center; color: red;'>❌ Vyplňte všetky polia</h1>");
             }
 
-            // Проверяем, есть ли пользователь с таким именем или email
+            // Overenie používateľa podľa mena alebo e-mailu
             $stmt = $this->db->prepare("SELECT * FROM users WHERE name = :username OR email = :username");
             $stmt->execute([':username' => $username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_role'] = $user['role']; // 'admin' или 'user'
+                $_SESSION['user_role'] = $user['role']; // 'admin' alebo 'user'
 
-                // Вывод сообщения и редирект через 2 секунды
-                echo "<h1 style='text-align: center; color: green;'>✅ Вход выполнен успешно!</h1>";
+                // Zobrazenie správy a presmerovanie po 2 sekundách
+                echo "<h1 style='text-align: center; color: green;'>✅ Prihlásenie úspešné!</h1>";
                 echo "<script>
                     setTimeout(function() {
                         window.location.href = '/VAII_KULINAR_WEB/public/index.php/home';
@@ -89,7 +89,7 @@ class AuthController {
                   </script>";
                 exit();
             } else {
-                echo "<h1 style='text-align: center; color: red;'>❌ Ошибка: неправильные данные</h1>";
+                echo "<h1 style='text-align: center; color: red;'>❌ Chyba: nesprávne údaje</h1>";
             }
         } else {
             require_once __DIR__ . '/../Views/pages/login.view.php';
@@ -97,7 +97,7 @@ class AuthController {
     }
 
 
-    // 3️⃣ Выход пользователя
+    // 3️⃣ Odhlásenie používateľa
     public function logout() {
         session_destroy();
         echo "<div style='
@@ -107,10 +107,10 @@ class AuthController {
         margin-top: 20%;
         color: green;
     '>
-        ✅ Выход выполнен!
+        ✅ Odhlásenie úspešné!
     </div>";
 
-        // Автоматический редирект через 3 секунды
+        // Automatické presmerovanie po 3 sekundách
         echo "<script>
         setTimeout(function() {
             window.location.href = '/VAII_KULINAR_WEB/public/index.php/login';
@@ -120,7 +120,7 @@ class AuthController {
     }
 
 
-    // 4️⃣ Создание администратора (ручной вызов)
+    // 4️⃣ Vytvorenie administrátora (manuálne volanie)
     public function createAdmin() {
         $email = "admin@example.com";
         $password = password_hash("admin123", PASSWORD_DEFAULT);
@@ -134,18 +134,18 @@ class AuthController {
                 ':role' => $role
             ]);
 
-            echo "✅ Админ создан: $email / admin123";
+            echo "✅ Administrátor vytvorený: $email / admin123";
         } catch (Exception $e) {
-            die("❌ Ошибка при создании админа: " . $e->getMessage());
+            die("❌ Chyba pri vytváraní administrátora: " . $e->getMessage());
         }
     }
 
-    // Проверка: пользователь авторизован?
+    // Overenie: je používateľ prihlásený?
     public function isAuthenticated() {
         return isset($_SESSION['user_id']);
     }
 
-// Проверка: является ли пользователь администратором?
+// Overenie: je používateľ administrátor?
     public function isAdmin() {
         return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     }

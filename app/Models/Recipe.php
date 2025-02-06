@@ -9,23 +9,24 @@ class Recipe {
         $this->db = Database::getInstance()->getConnection();
     }
 
-
-    // Получение всех рецептов
+    // Získanie všetkých receptov
     public function getAllRecipes($search = '') {
         if ($search) {
-            // Поиск по имени, без учета регистра
+            // Hľadanie podľa názvu, bez ohľadu na veľkosť písmen
             $stmt = $this->db->prepare("SELECT * FROM recipes WHERE LOWER(name) LIKE LOWER(:search)");
             $stmt->execute(['search' => '%' . $search . '%']);
         } else {
-            // Если поиск не был задан, возвращаем все рецепты
+            // Ak nebolo zadané hľadanie, vrátime všetky recepty
             $stmt = $this->db->query("SELECT * FROM recipes");
         }
 
-        // Возвращаем все рецепты в виде массива
+        // Vrátime všetky recepty vo forme poľa
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Získanie ingrediencií pre konkrétny recept
     public function getIngredientsForRecipe($recipeId) {
-        // Сначала извлекаем все ingredient_id для данного recipe_id из таблицы связей
+        // Najprv získame všetky ingredient_id pre daný recipe_id z prepojenej tabuľky
         $stmt = $this->db->prepare("
         SELECT ingredient_id, amount 
         FROM recipe_ingredients 
@@ -34,15 +35,15 @@ class Recipe {
 
         $ingredients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Теперь получаем сами ингредиенты по ingredient_id
+        // Teraz získame samotné ingrediencie podľa ingredient_id
         $ingredientDetails = [];
         foreach ($ingredients as $ingredient) {
-            // Для каждого ingredient_id извлекаем название ингредиента
+            // Pre každý ingredient_id získame názov ingrediencie
             $stmt = $this->db->prepare("SELECT name FROM ingredients WHERE id = :id");
             $stmt->execute(['id' => $ingredient['ingredient_id']]);
             $ingredientData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Добавляем в массив с количеством
+            // Pridáme do poľa s množstvom
             $ingredientDetails[] = [
                 'name' => $ingredientData['name'],
                 'amount' => $ingredient['amount']
@@ -52,18 +53,14 @@ class Recipe {
         return $ingredientDetails;
     }
 
-
-
-
-
-    // Получение рецепта по ID
+    // Získanie receptu podľa ID
     public function getRecipeById($id) {
         $stmt = $this->db->prepare('SELECT * FROM recipes WHERE id = :id');
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Добавление нового рецепта (исправлено)
+    // Pridanie nového receptu
     public function createRecipe($name, $description, $steps, $image = null) {
         $stmt = $this->db->prepare('INSERT INTO recipes (name, description, steps, image) VALUES (:name, :description, :steps, :image)');
         $stmt->execute([
@@ -74,9 +71,7 @@ class Recipe {
         ]);
     }
 
-
-
-
+    // Aktualizácia receptu
     public function updateRecipe($id, $name, $description, $steps, $image) {
         $stmt = $this->db->prepare('UPDATE recipes SET name = :name, description = :description, steps = :steps, image = :image WHERE id = :id');
         $stmt->execute([
@@ -88,14 +83,10 @@ class Recipe {
         ]);
     }
 
-
-
-    // Удаление рецепта
+    // Odstránenie receptu
     public function deleteRecipe($id) {
         $stmt = $this->db->prepare("DELETE FROM recipes WHERE id = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
-
-
 }

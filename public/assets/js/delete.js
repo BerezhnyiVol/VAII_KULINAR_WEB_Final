@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".button-delete").forEach(button => {
         button.addEventListener("click", function () {
-            const recipeId = this.dataset.id; // Получаем ID рецепта
+            const recipeId = this.dataset.id; // Získanie ID receptu
 
             if (!recipeId) {
-                alert("Ошибка: ID рецепта не определён.");
+                alert("Chyba: ID receptu nie je definované.");
                 return;
             }
 
@@ -19,28 +19,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // 1️⃣ Удаляем элемент из DOM
+                        // 1️⃣ Odstránenie prvku z DOM
                         const recipeElement = document.getElementById(`recipe-${recipeId}`);
                         if (recipeElement) {
                             recipeElement.remove();
                         }
 
-                        // 2️⃣ Показываем всплывающее сообщение
-                        showSuccessMessage("✅ Рецепт успешно удалён!");
+                        // 2️⃣ Zobrazenie vyskakovacej správy
+                        showSuccessMessage("✅ Recept bol úspešne vymazaný!");
 
                     } else {
-                        alert("❌ Ошибка: " + (data.error || "Не удалось удалить рецепт."));
+                        alert("❌ Chyba: " + (data.error || "Nepodarilo sa vymazať recept."));
                     }
                 })
                 .catch(error => {
-                    console.error("Ошибка при удалении:", error);
-                    alert("❌ Ошибка: сервер вернул некорректные данные.");
+                    console.error("Chyba pri vymazaní:", error);
+                    alert("❌ Chyba: server vrátil nesprávne údaje.");
                 });
         });
     });
 });
 
-// 🔹 Функция для отображения сообщения об успешном удалении
+// 🔹 Funkcia na zobrazenie správy o úspešnom vymazaní
 function showSuccessMessage(message) {
     const messageBox = document.getElementById("success-message");
     messageBox.textContent = message;
@@ -48,5 +48,5 @@ function showSuccessMessage(message) {
 
     setTimeout(() => {
         messageBox.style.display = "none";
-    }, 3000); // Сообщение исчезает через 3 секунды
+    }, 3000); // Správa zmizne po 3 sekundách
 }

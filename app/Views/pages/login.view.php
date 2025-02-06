@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход</title>
-    <link rel="stylesheet" href="/VAII_KULINAR_WEB/public/assets/auth.css"> <!-- Подключаем стили -->
+    <title>Prihlásenie</title>
+    <link rel="stylesheet" href="/VAII_KULINAR_WEB/public/assets/auth.css"> <!-- Pripojenie štýlov -->
 </head>
 <body>
 <div class="container">
-    <h2>Вход</h2>
+    <h2>Prihlásenie</h2>
 
     <form method="POST" action="/VAII_KULINAR_WEB/public/index.php/login/attempt">
-        <label for="username">Имя или Email:</label>
+        <label for="username">Meno alebo Email:</label>
         <input type="text" name="username" id="username" required>
 
-        <label for="password">Пароль:</label>
+        <label for="password">Heslo:</label>
         <input type="password" name="password" id="password" required>
 
-        <button type="submit">Войти</button>
+        <button type="submit">Prihlásiť sa</button>
     </form>
 
-    <a href="/VAII_KULINAR_WEB/public/index.php/register">Регистрация</a>
+    <a href="/VAII_KULINAR_WEB/public/index.php/register">Registrácia</a>
 </div>
 </body>
 </html>

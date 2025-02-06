@@ -6,7 +6,7 @@
     </div>
 
     <?php if (isset($_SESSION['user_id'])) : ?>
-        <a href="/VAII_KULINAR_WEB/public/index.php/logout" class="logout-button">🚪 Выйти</a>
+        <a href="/VAII_KULINAR_WEB/public/index.php/logout" class="logout-button">🚪Odhlásiť sa</a>
     <?php endif; ?>
 
     <nav class="nav">
