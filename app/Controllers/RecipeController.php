@@ -232,23 +232,27 @@ class RecipeController {
 
     // Удаление рецепта
     public function delete($id) {
-        header('Content-Type: application/json'); // ✅ Указываем, что ответ - JSON
-
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            echo json_encode(['success' => false, 'message' => 'Nemáte povolenie na vymazanie receptu!']);
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(["error" => "ID рецепта не передан"]);
             exit;
         }
 
-        $recipeModel = new RecipeModel();
+        $recipeModel = new Recipe(); // Возможно тут ошибка!
         $deleted = $recipeModel->deleteRecipe($id);
 
         if ($deleted) {
-            echo json_encode(['success' => true]);
+            echo json_encode(["success" => "Рецепт удалён"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Chyba pri mazaní receptu!']);
+            http_response_code(500);
+            echo json_encode(["error" => "Ошибка при удалении рецепта"]);
         }
         exit;
     }
+
+
+
+
 
 
 }

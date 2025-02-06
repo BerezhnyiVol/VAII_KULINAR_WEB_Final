@@ -13,6 +13,7 @@ $authController = new AuthController();
 
 
 
+
 switch ($uri) {
 
     case '/':

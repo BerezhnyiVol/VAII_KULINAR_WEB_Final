@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                         const actionsDiv = document.getElementById(`admin-actions-${recipe.id}`);
                                         actionsDiv.innerHTML = `
                                             <button class="button-edit" onclick="location.href='/VAII_KULINAR_WEB/public/index.php/recipe/edit/${recipe.id}'">✏️ Upraviť</button>
-                                            <button class="button-delete" data-recipe-id="${recipe.id}">❌ Vymazať</button>
+                                            <button class="button-delete" data-recipe-id="<?= $recipe['id'] ?>">❌ Vymazať</button>
+
 
                                         `;
                                     }

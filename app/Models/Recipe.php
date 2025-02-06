@@ -92,7 +92,10 @@ class Recipe {
 
     // Удаление рецепта
     public function deleteRecipe($id) {
-        $stmt = $this->db->prepare('DELETE FROM recipes WHERE id = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt = $this->db->prepare("DELETE FROM recipes WHERE id = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
+
+
 }
