@@ -232,10 +232,23 @@ class RecipeController {
 
     // Удаление рецепта
     public function delete($id) {
-        if (is_numeric($id)) {
-            $this->recipeModel->deleteRecipe($id);
+        header('Content-Type: application/json'); // ✅ Указываем, что ответ - JSON
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            echo json_encode(['success' => false, 'message' => 'Nemáte povolenie na vymazanie receptu!']);
+            exit;
         }
-        header('Location: /VAII_KULINAR_WEB/public/index.php/recipes');
+
+        $recipeModel = new RecipeModel();
+        $deleted = $recipeModel->deleteRecipe($id);
+
+        if ($deleted) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Chyba pri mazaní receptu!']);
+        }
         exit;
     }
+
+
 }
