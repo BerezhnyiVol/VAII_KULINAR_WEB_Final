@@ -11,7 +11,6 @@
 
     <nav class="nav">
         <a href="/VAII_KULINAR_WEB/public/index.php/home" class="button-nav">🏠 Domov</a>
-        <a href="/VAII_KULINAR_WEB/public/index.php/about" class="button-nav">O nás</a>
         <a href="/VAII_KULINAR_WEB/public/index.php/recipes" class="button-nav">Recepty</a>
     </nav>
 
