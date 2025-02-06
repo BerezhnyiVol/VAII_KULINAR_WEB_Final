@@ -1,0 +1,21 @@
+/* Структура для фиксации футера внизу страницы */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Минимальная высота для всего экрана */
+    margin: 0;
+}
+
+main {
+    flex: 1; /* Основной контент растягивается на доступную высоту */
+    padding-bottom: 60px; /* Отступ для футера, чтобы кнопки не наезжали */
+}
+
+/* Стили футера */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}

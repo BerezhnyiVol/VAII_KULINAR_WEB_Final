@@ -1,0 +1,68 @@
+/* Стили для хедера */
+.header {
+    background-color: #4a4a4a;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Логотип */
+.header .logo h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Навигация */
+.nav {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: darkgreen;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+}
+
+.nav a:hover {
+    background-color: #777;
+}
+
+/* Кнопка выхода */
+.logout-button {
+    background-color: darkred;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 20px; /* Отступ от логотипа */
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: red;
+}
+
+
+
+/* Кнопка добавления рецепта */
+.add-recipe-button {
+    position: absolute;
+    right: 30px;
+    background-color: #4CAF50;
+}
+
+.add-recipe-button:hover {
+    background-color: #45a049;
+}
