@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? '/VAII_KULINAR_WEB/public/index.php/recipes'
                 : `/VAII_KULINAR_WEB/public/index.php/recipes/search?query=${encodeURIComponent(query)}`;
 
+
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
